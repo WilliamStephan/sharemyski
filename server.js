@@ -3,7 +3,6 @@ require("dotenv").config();
 
 //requires for app
 let fs = require('fs');
-let morgan = require('morgan');
 let path = require('path');
 
 let express = require("express");
@@ -18,10 +17,6 @@ let passportloc = require('passport-local');
 let db = require("./models");
 let app = express();
 let PORT = process.env.PORT || 3000;
-
-// HTTP request logging
-let accessLogStream = fs.createWriteStream(path.join(__dirname, 'log/access.log'), { flags: 'a' });
-app.use(morgan('combined', { stream: accessLogStream }));  
 
 // Middleware for Facebook Auth
 app.use(express.urlencoded({ extended: true }));

@@ -52,22 +52,27 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.get("/stuff/:id", function (req, res) {
+  app.get("/rent/:id", function (req, res) {
     db.Item.findOne({
       where: {
         id: req.params.id
       },
       include: [{
-        model: db.User,
-        model: db.Location
+        model: db.User
       }]
     }).then(function (dbStuff) {
       console.log(dbStuff);
-      res.render("stuff", {
-        all: false,
-        id: req.params.id,
-        data: dbStuff
-      });
+      if (req.user) {
+        console.log(req.user);
+        res.render("rent", {
+          data: dbStuff,
+          title: "sharemyski - rent gear",
+          loggedIn: true,
+          user: req.user
+        });
+      } else {
+        res.redirect("/login");
+      }
     });
   });
 

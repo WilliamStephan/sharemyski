@@ -9,7 +9,8 @@ let facebookAuth = {
   'clientSecret': process.env.FACEBOOK_CLIENT_SECRET, // your App Secret
   'callbackURL': '/auth/facebook/callback',
   'profileURL': 'https://graph.facebook.com/v2.5/me?fields=first_name,last_name,email',
-  'profileFields': ['id', 'email', 'name'] // For requesting permissions from Facebook API
+  'profileFields': ['id', 'email', 'name'],
+  'proxy': true // For requesting permissions from Facebook API
 };
 
 
@@ -50,7 +51,8 @@ passport.use(new FacebookStrategy({
     clientID: facebookAuth.clientID,
     clientSecret: facebookAuth.clientSecret,
     callbackURL: facebookAuth.callbackURL,
-    profileFields: facebookAuth.profileFields
+    profileFields: facebookAuth.profileFields,
+    proxy: true
   },
 
   // facebook will send back the token and profile
