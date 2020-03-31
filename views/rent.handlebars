@@ -1,0 +1,89 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+<style>
+    .my-div-icon {
+        font-size: 50px;
+    }
+</style>
+<div class="row d-flex justify-content-center">
+    <div class="col-md-7 m-2" id="stuffContainer">
+        <h1>Checkout</h1>
+            <div >{{data.dataValues.description}}</div>
+            <div >{{data.dataValues.image}}</div>
+
+    </div>
+
+
+    {{!-- id: 3,
+    description: 'Red Plastic Snow Saucer',
+    image: 'https://static.turbosquid.com/Preview/2016/12/28__03_36_39/SnowSaucer3dsmodel003.jpg5C82C94A-1B0E-4094-A16C-56102670CAB7DefaultHQ.jpg',
+    inUse: false,
+    start: 0,
+    end: 0,
+    daysRented: 0,
+    address: '222 E 6th Street',
+    city: 'Austin',
+    state: 'Texas',
+    zip: '78702',
+    country: 'USA',
+    lng: -97.7406062,
+    lat: 30.2674923,
+    dayCost: 40,
+    xRented: 0,
+    equipRating: 2.5,
+    renterRating: 0,
+    createdAt: 2020-03-28T15:28:43.000Z,
+    updatedAt: 2020-03-28T15:28:43.000Z,
+    UserId: 3,
+    CategoryId: 5, --}}
+
+
+<div class="col-md-3">
+    <div id="map" style="height: 400px; "></div>
+</div>
+
+</div>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin=""></script>
+
+<script>
+    let lat = `{{data.dataValues.lat}}`;
+    let lng = `{{data.dataValues.lng}}`;
+    let description = `{{data.dataValues.description}}`;
+    let id = `{{data.dataValues.id}}`;
+    $(document).ready(function () {
+
+
+        var map = L.map('map').setView([lat, lng], 11);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var skiIcon = L.divIcon({
+            html: '🎿',
+            className: 'my-div-icon'
+        });
+        var boardIcon = L.divIcon({
+            html: '🏂',
+            className: 'my-div-icon'
+        });
+        let marker = null;
+
+
+        if (description.includes("Board") || description.includes("board")) {
+            marker = boardIcon;
+        } else {
+            marker = skiIcon;
+        }
+
+        L.marker([lat, lng], {
+            icon: marker
+        }).addTo(map).bindPopup(`<a class="popup" data-id="${id}" href="/item/${id}">${description}</a>`);
+
+
+    });
+
+</script>
