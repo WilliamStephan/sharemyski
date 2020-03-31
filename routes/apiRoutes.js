@@ -8,7 +8,7 @@ module.exports = function (app) {
     let id = req.params.id;
     if (id) {
       db.Item.findOne({
-        where: [{id: id}],
+        where: [{ id: id }],
         include: [db.User, db.Category]
       }).then(function (dbItem) {
         console.log(dbItem);
@@ -83,12 +83,12 @@ module.exports = function (app) {
 
   // Delete an example by id
   app.delete("/api/item/:id", function (req, res) {
-    db.Example.destroy({
+    db.item.destroy({
       where: {
         id: req.params.id
       }
-    }).then(function (dbExample) {
-      res.json(dbExample);
+    }).then(function (dbItem) {
+      res.json(dbItem);
     });
   });
 

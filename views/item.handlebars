@@ -1,0 +1,84 @@
+<div id="container">
+    <h3>Item Maintenance</h3>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm" id="items">
+            <thead>
+                <tr>
+                    <th>User Id</th>
+                    <th>Description</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>CRTY</th>
+                    <th>Lat</th>
+                    <th>Lng</th>
+                    <th>Day($)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="items2">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="container">
+    <h2>Add Items</h2>
+    <form action="/api/item" method="POST">
+        <input type="text">
+        <input type="text">
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/item",
+            method: "GET"
+        }).then(function (response) {
+            response.forEach((e, index) => {
+                console.log(e);
+                let row = $(`<tr id="r${e.id}">`);
+                row.append($("<td>").text(e.userId));
+                row.append($("<td>").text(e.description));
+                row.append($("<td>").text(e.address));
+                row.append($("<td>").text(e.city));
+                row.append($("<td>").text(e.state));
+                row.append($("<td>").text(e.zip));
+                row.append($("<td>").text(e.country));
+                row.append($("<td>").text(e.lng));
+                row.append($("<td>").text(e.lat));
+                row.append($("<td>").text(e.dayCost));
+                row.append(`<td><button id="u${e.id}" class="btn btn-warning" onclick="updateItem(${e.id})">U</button><button id="d${e.id}" class="action btn btn-danger" onclick="deleteItem(${e.id})">D</button></td>`);
+                $("#items > tbody").append(row);
+            });
+        });
+    });
+
+    function updateItem(pid) {
+        console.log("*************************************");
+        console.log(pid);
+    };
+
+    function deleteItem(pid) {
+        $("#r" + pid).remove();
+        $.ajax({
+            url: "/api/item/" + pid,
+            method: "delete"
+        }).then(function (response) {
+            console.log(response);
+        });
+
+        console.log("*************************************");
+        console.log(pid);
+    };
+
+    function InsertItem(pid) {
+        console.log("*************************************");
+        console.log(pid);
+    };
+
+</script>

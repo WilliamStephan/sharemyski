@@ -28,14 +28,14 @@ module.exports = function (app, passport) {
       include: [{
         model: db.User
       }]
-    }).then(function (dbStuff) {
-      console.log(dbStuff);
+    }).then(function (dbItem) {
+      console.log(dbItem);
       if (req.user) {
         console.log(req.user);
         res.render("search", {
           lat: req.body.lat,
           lng: req.body.lng,
-          data: dbStuff,
+          data: dbItem,
           title: "sharemyski - the best place to find gear",
           loggedIn: true,
           user: req.user
@@ -44,7 +44,7 @@ module.exports = function (app, passport) {
         res.render("search", {
           lat: req.body.lat,
           lng: req.body.lng,
-          data: dbStuff,
+          data: dbItem,
           title: "sharemyski - the best place to find gear",
           loggedIn: false
         });
@@ -60,12 +60,12 @@ module.exports = function (app, passport) {
       include: [{
         model: db.User
       }]
-    }).then(function (dbStuff) {
-      console.log(dbStuff);
+    }).then(function (dbItem) {
+      console.log(dbItem);
       if (req.user) {
         console.log(req.user);
         res.render("rent", {
-          data: dbStuff,
+          data: dbItem,
           title: "sharemyski - rent gear",
           loggedIn: true,
           user: req.user
@@ -76,41 +76,49 @@ module.exports = function (app, passport) {
     });
   });
 
-  app.get("/admin/stuff", function (req, res) {
-    // check if user is admin
-    res.render("stuff", {
-      all: true
-    });
-    // else res.render("404");
+  app.get("/admin/item", function (req, res) {
+
+    if (req.user && req.user.admin) {  // requires admin priv
+      console.log(req.user)
+      // check if user is admin
+      res.render("item", {
+        all: true
+      });
+    }
+    else res.render("404");
   });
 
   app.get("/admin/user", function (req, res) {
-    // check if user is admin
-    res.render("user");
-    // else res.render("404");
+    if (req.user && req.user.admin) {  // requires admin priv
+      res.render("user");
+    }
+    else res.render("404");
   });
 
   app.get("/admin/transaction", function (req, res) {
-    // check if user is admin
-    res.render("transaction");
-    // else res.render("404");
+    if (req.user && req.user.admin) {  // requires admin priv
+      res.render("transaction");
+    }
+    else res.render("404");
   });
 
   app.get("/admin/location", function (req, res) {
-    // check if user is admin
-    res.render("location");
-    // else res.render("404");
+    if (req.user && req.user.admin) {  // requires admin priv
+      res.render("location");
+    }
+    else res.render("404");
   });
 
   app.get("/admin/category", function (req, res) {
-    // check if user is admin
-    res.render("category");
-    // else res.render("404");
+    if (req.user && req.user.admin) {  // requires admin priv
+      res.render("category");
+    }
+    else res.render("404");
   });
 
   app.get("/allrentals", function (req, res) {
     // if users is admin
-    db.Example.findAll({}).then(function (dbExamples) {
+    db.Example.findAll({ Items }).then(function (dbExamples) {
       res.render("allrentals", {
         authorized: "1",
         msg: "Welcome!",

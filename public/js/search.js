@@ -14,7 +14,7 @@ function renderStuff(item) {
 }
 
 $(document).ready(function () {
-    
+
     var map = L.map('map').setView([lat, lng], 11);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
