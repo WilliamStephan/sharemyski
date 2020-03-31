@@ -3,7 +3,7 @@ let passport = require("../config/passport");
 
 module.exports = function (app) {
 
-  // API to get Stuff
+  // API to get Items
   app.get("/api/item/:id?", function (req, res) {
     let id = req.params.id;
     if (id) {
@@ -72,18 +72,35 @@ module.exports = function (app) {
 
   });
 
-  // Create a new example
+
   app.post("/api/item", function (req, res) {
-    db.Example.create(req.body).then(function (dbExample) {
-      res.json(dbExample);
-    });
+    console.log(req.body)
+    db.Item.create({
+      userId: req.body.puserid,
+      description: req.body.pdescription,
+      address: req.body.paddress,
+      city: req.body.city,
+      state: req.body.state,
+      zip: req.body.zip,
+      country: req.body.country,
+      lng: req.body.lng,
+      lat: req.body.lat,
+      dayCost: req.body.dayCost,
+      image: req.body.image
+    })
+      .then(function () {
+        res.redirect(307, "/api/login");
+      })
+      .catch(function (err) {
+        res.status(401).json(err);
+      });
   });
 
 
 
-  // Delete an example by id
+  // delete item
   app.delete("/api/item/:id", function (req, res) {
-    db.item.destroy({
+    db.Item.destroy({
       where: {
         id: req.params.id
       }
@@ -91,6 +108,29 @@ module.exports = function (app) {
       res.json(dbItem);
     });
   });
+
+  // delete user
+  app.delete("/api/user/:id", function (req, res) {
+    db.User.destroy({
+      where: {
+        id: req.params.id
+      }
+    }).then(function (dbUser) {
+      res.json(dbUser);
+    });
+  });
+
+  // delete category
+  app.delete("/api/category/:id", function (req, res) {
+    db.Category.destroy({
+      where: {
+        id: req.params.id
+      }
+    }).then(function (dbCategory) {
+      res.json(dbCategory);
+    });
+  });
+
 
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.

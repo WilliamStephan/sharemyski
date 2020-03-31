@@ -23,17 +23,58 @@
     </div>
 </div>
 
-<div id="container">
-    <h2>Add Items</h2>
-    <form action="/api/item" method="POST">
-        <input type="text">
-        <input type="text">
-        <button type="submit">Submit</button>
-    </form>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemModal">
+    New Item
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="itemModalLabel">New Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/api/item" method="POST">
+                    <label for="puserid" style="width: 40px;">User:</label>
+                    <input id="puserid" style="width: 400px;" type="number">
+                    <label for="pdescription" style="width: 40px;">Desc:</label>
+                    <input id="pdescription" style="width: 400px;" type="text">
+                    <label for="paddress" style="width: 40px;">Addr:</label>
+                    <input id="paddress" style="width: 400px;" type="text">
+                    <label for="pcity" style="width: 40px;">City:</label>
+                    <input id="pcity" style="width: 150px;" type="text">
+                    <label for="pstate" style="width: 33px;">St:</label>
+                    <input id="pstate" style="width: 100px;" type="text">
+                    <label for="pzip">Zip:</label>
+                    <input id="pzip" style="width: 75px;" type="text">
+                    <label for="pcountry" style="width: 40px;">Ctry:</label>
+                    <input id="pcountry" style="width: 129px;" type="text">
+                    <label for="plng">Lng:</label>
+                    <input id="plng" style="width: 100px;" type="text">
+                    <label for="plat">Lat:</label>
+                    <input id="plat" style="width: 100px;" type="text">
+                    <label for="pdaycost" style="width: 40px;">Cost:</label>
+                    <input id="pdaycost" type="number"><br>
+                    <label for="pimage" style="width: 40px;">Img:</label>
+                    <input id="pimage" style="width: 400px;" type="text">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
 </div>
 
-<script>
 
+
+<script>
     $(document).ready(function () {
         $.ajax({
             url: "/api/item",
@@ -59,6 +100,8 @@
     });
 
     function updateItem(pid) {
+        $('#itemModalLabel').text = "Update Item";
+        $('#itemModal').modal()
         console.log("*************************************");
         console.log(pid);
     };
@@ -71,14 +114,10 @@
         }).then(function (response) {
             console.log(response);
         });
-
-        console.log("*************************************");
-        console.log(pid);
     };
 
     function InsertItem(pid) {
         console.log("*************************************");
         console.log(pid);
     };
-
 </script>

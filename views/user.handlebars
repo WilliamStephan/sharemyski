@@ -6,44 +6,110 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
+                    <th>eMail</th>
                     <th>Phone</th>
-                    <th>Renter Rating</th>
-                    <th>Owner Rating</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>CRTY</th>
+                    <th>Admin</th>
+                    <th></th>
                 </tr>
             </thead>
-            <tbody id="stuff2">
-
+            <tbody id="users2">
             </tbody>
         </table>
     </div>
 </div>
 
-<div id="container">
-    <h2>Add Rentals</h2>
-    <form action="/api/users" method="POST">
-        <input type="text">
-        <input type="text">
-        <button type="submit">Submit</button>
-    </form>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#userModal">
+    New User
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">New User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/api/user" method="POST">
+                    <label for="pname" style="width: 50px;">Name:</label>
+                    <input id="pname" style="width: 400px;" type="text">
+                    <label for="pemail" style="width: 50px;">eMail:</label>
+                    <input id="pemail" style="width: 400px;" type="text">
+                    <label for="pphone" style="width: 50px;">Phone:</label>
+                    <input id="pphone" style="width: 400px;" type="text">
+                    <label for="paddress" style="width: 50px;">Addr:</label>
+                    <input id="paddress" style="width: 400px;" type="text">
+                    <label for="pcity" style="width: 50px;">City:</label>
+                    <input id="pcity" style="width: 150px;" type="text">
+                    <label for="pstate" style="width: 33px;">St:</label>
+                    <input id="pstate" style="width: 100px;" type="text">
+                    <label for="pzip">Zip:</label>
+                    <input id="pzip" style="width: 75px;" type="text">
+                    <label for="pcountry" style="width: 50px;">Ctry:</label>
+                    <input id="pcountry" style="width: 129px;" type="text">
+                    <label for="padmin">Admin:</label>
+                    <input id="padim" style="width: 100px;" type="text">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
     </div>
+</div>
+
 
 <script>
     $(document).ready(function () {
         $.ajax({
-            url: "/api/users",
+            url: "/api/user",
             method: "GET"
         }).then(function (response) {
-            
+
             response.forEach(e => {
                 console.log(e);
-                let row = $("<tr>");
+                let row = $(`<tr id="r${e.id}">`);
                 row.append($("<td>").text(e.id));
                 row.append($("<td>").text(e.name));
+                row.append($("<td>").text(e.email));
                 row.append($("<td>").text(e.phone));
-                row.append($("<td>").text(e.renter_rating_avg));
-                row.append($("<td>").text(e.owner_rating_avg));    
+                row.append($("<td>").text(e.address));
+                row.append($("<td>").text(e.city));
+                row.append($("<td>").text(e.state));
+                row.append($("<td>").text(e.zip));
+                row.append($("<td>").text(e.country));
+                row.append($("<td>").text(e.admin));
+                row.append(`<td><button id="u${e.id}" class="btn btn-warning" onclick="updateUser(${e.id})">U</button><button id="d${e.id}" class="action btn btn-danger" onclick="deleteUser(${e.id})">D</button></td>`);
                 $("#users > tbody").append(row);
             });
         });
     });
+
+    function updateUser(pid) {
+        $('#userModalLabel').text = "Update User";
+        $('#userModal').modal()
+        console.log("*************************************");
+        console.log(pid);
+    };
+
+    function deleteUser(pid) {
+        $("#r" + pid).remove();
+        $.ajax({
+            url: "/api/user/" + pid,
+            method: "delete"
+        }).then(function (response) {
+            console.log(response);
+        });
+    };
+
+
 </script>

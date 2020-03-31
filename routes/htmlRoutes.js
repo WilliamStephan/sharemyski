@@ -76,8 +76,8 @@ module.exports = function (app, passport) {
     });
   });
 
+  // Item admin
   app.get("/admin/item", function (req, res) {
-
     if (req.user && req.user.admin) {  // requires admin priv
       console.log(req.user)
       // check if user is admin
@@ -102,12 +102,6 @@ module.exports = function (app, passport) {
     else res.render("404");
   });
 
-  app.get("/admin/location", function (req, res) {
-    if (req.user && req.user.admin) {  // requires admin priv
-      res.render("location");
-    }
-    else res.render("404");
-  });
 
   app.get("/admin/category", function (req, res) {
     if (req.user && req.user.admin) {  // requires admin priv
