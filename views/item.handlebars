@@ -1,0 +1,123 @@
+<div id="container">
+    <h3>Item Maintenance</h3>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm" id="items">
+            <thead>
+                <tr>
+                    <th>User Id</th>
+                    <th>Description</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>CRTY</th>
+                    <th>Lat</th>
+                    <th>Lng</th>
+                    <th>Day($)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="items2">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemModal">
+    New Item
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="itemModalLabel">New Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/api/item" method="POST">
+                    <label for="puserid" style="width: 40px;">User:</label>
+                    <input id="puserid" style="width: 400px;" type="number">
+                    <label for="pdescription" style="width: 40px;">Desc:</label>
+                    <input id="pdescription" style="width: 400px;" type="text">
+                    <label for="paddress" style="width: 40px;">Addr:</label>
+                    <input id="paddress" style="width: 400px;" type="text">
+                    <label for="pcity" style="width: 40px;">City:</label>
+                    <input id="pcity" style="width: 150px;" type="text">
+                    <label for="pstate" style="width: 33px;">St:</label>
+                    <input id="pstate" style="width: 100px;" type="text">
+                    <label for="pzip">Zip:</label>
+                    <input id="pzip" style="width: 75px;" type="text">
+                    <label for="pcountry" style="width: 40px;">Ctry:</label>
+                    <input id="pcountry" style="width: 129px;" type="text">
+                    <label for="plng">Lng:</label>
+                    <input id="plng" style="width: 100px;" type="text">
+                    <label for="plat">Lat:</label>
+                    <input id="plat" style="width: 100px;" type="text">
+                    <label for="pdaycost" style="width: 40px;">Cost:</label>
+                    <input id="pdaycost" type="number"><br>
+                    <label for="pimage" style="width: 40px;">Img:</label>
+                    <input id="pimage" style="width: 400px;" type="text">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/item",
+            method: "GET"
+        }).then(function (response) {
+            response.forEach((e, index) => {
+                console.log(e);
+                let row = $(`<tr id="r${e.id}">`);
+                row.append($("<td>").text(e.userId));
+                row.append($("<td>").text(e.description));
+                row.append($("<td>").text(e.address));
+                row.append($("<td>").text(e.city));
+                row.append($("<td>").text(e.state));
+                row.append($("<td>").text(e.zip));
+                row.append($("<td>").text(e.country));
+                row.append($("<td>").text(e.lng));
+                row.append($("<td>").text(e.lat));
+                row.append($("<td>").text(e.dayCost));
+                row.append(`<td><button id="u${e.id}" class="btn btn-warning" onclick="updateItem(${e.id})">U</button><button id="d${e.id}" class="action btn btn-danger" onclick="deleteItem(${e.id})">D</button></td>`);
+                $("#items > tbody").append(row);
+            });
+        });
+    });
+
+    function updateItem(pid) {
+        $('#itemModalLabel').text = "Update Item";
+        $('#itemModal').modal()
+        console.log("*************************************");
+        console.log(pid);
+    };
+
+    function deleteItem(pid) {
+        $("#r" + pid).remove();
+        $.ajax({
+            url: "/api/item/" + pid,
+            method: "delete"
+        }).then(function (response) {
+            console.log(response);
+        });
+    };
+
+    function InsertItem(pid) {
+        console.log("*************************************");
+        console.log(pid);
+    };
+</script>
