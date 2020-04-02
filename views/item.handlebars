@@ -24,10 +24,7 @@
 </div>
 
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#itemModal">
-    New Item
-</button>
+<button type="button" class="btn btn-primary" onclick="addItem()">New Item </button>
 
 <!-- Modal -->
 <div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
@@ -40,30 +37,30 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="/api/item" method="POST">
-                    <label for="puserid" style="width: 40px;">User:</label>
-                    <input id="puserid" style="width: 400px;" type="number">
-                    <label for="pdescription" style="width: 40px;">Desc:</label>
-                    <input id="pdescription" style="width: 400px;" type="text">
-                    <label for="paddress" style="width: 40px;">Addr:</label>
-                    <input id="paddress" style="width: 400px;" type="text">
-                    <label for="pcity" style="width: 40px;">City:</label>
-                    <input id="pcity" style="width: 150px;" type="text">
-                    <label for="pstate" style="width: 33px;">St:</label>
-                    <input id="pstate" style="width: 100px;" type="text">
-                    <label for="pzip">Zip:</label>
-                    <input id="pzip" style="width: 75px;" type="text">
-                    <label for="pcountry" style="width: 40px;">Ctry:</label>
-                    <input id="pcountry" style="width: 129px;" type="text">
-                    <label for="plng">Lng:</label>
-                    <input id="plng" style="width: 100px;" type="text">
-                    <label for="plat">Lat:</label>
-                    <input id="plat" style="width: 100px;" type="text">
-                    <label for="pdaycost" style="width: 40px;">Cost:</label>
-                    <input id="pdaycost" type="number"><br>
-                    <label for="pimage" style="width: 40px;">Img:</label>
-                    <input id="pimage" style="width: 400px;" type="text">
-                    <button type="submit" class="btn btn-primary">Create</button>
+                <form id="modal-form">
+                    <label for="userid" style="width: 40px;">User:</label>
+                    <input id="userid" class="modaldata" style="width: 400px;" type="number">
+                    <label for="description" style="width: 40px;">Desc:</label>
+                    <input id="description" class="modaldata" style="width: 400px;" type="text">
+                    <label for="address" style="width: 40px;">Addr:</label>
+                    <input id="address" class="modaldata" style="width: 400px;" type="text">
+                    <label for="city" style="width: 40px;">City:</label>
+                    <input id="city" class="modaldata" style="width: 150px;" type="text">
+                    <label for="state" style="width: 33px;">St:</label>
+                    <input id="state" class="modaldata" style="width: 100px;" type="text">
+                    <label for="zip">Zip:</label>
+                    <input id="zip" class="modaldata" style="width: 75px;" type="text">
+                    <label for="country" style="width: 40px;">Ctry:</label>
+                    <input id="country" class="modaldata" style="width: 129px;" type="text">
+                    <label for="lng">Lng:</label>
+                    <input id="lng" class="modaldata" style="width: 100px;" type="text">
+                    <label for="lat">Lat:</label>
+                    <input id="lat" class="modaldata" style="width: 100px;" type="text">
+                    <label for="dayCost" style="width: 40px;">Cost:</label>
+                    <input id="dayCost" class="modaldata" type="number"><br>
+                    <label for="image" style="width: 40px;">Img:</label>
+                    <input id="image" class="modaldata" style="width: 400px;" type="text">
+                    <button id="gobtn" type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -75,7 +72,14 @@
 
 
 <script>
+    let workingId = 0;
     $(document).ready(function () {
+        showAll();
+        document.getElementById('modal-form').onsubmit = sendData();
+    });
+
+    function showAll() {
+        workingId = 0;
         $.ajax({
             url: "/api/item",
             method: "GET"
@@ -97,13 +101,64 @@
                 $("#items > tbody").append(row);
             });
         });
-    });
+    }
 
-    function updateItem(pid) {
-        $('#itemModalLabel').text = "Update Item";
+    function addItem() {
+        workingId = 0;
         $('#itemModal').modal()
-        console.log("*************************************");
-        console.log(pid);
+        el = [...document.getElementsByClassName("modaldata")];
+        el.forEach(classItem => { // clear form data
+            console.log(classItem);
+            classItem.value = "";
+        });
+        document.getElementById('itemModalLabel').innerHTML = "Add Item";
+        document.getElementById('gobtn').innerHTML = "Add";
+    }
+
+    function sendData() { // creates item object for adding or editing items
+        let itemObj = {}
+        el = [...document.getElementsByClassName("modaldata")];
+        el.forEach(classItem => { // clear form data
+            itemObj[classItem.id] = classItem.value
+        });
+        if (workingId > 0) { // new item
+            $.ajax({
+                url: "/api/item/" + workingId,
+                method: "POST"
+            }).then(itemObj);
+        }
+        else { //updated item
+            $.ajax({
+                url: "/api/item/",
+                method: "POST"
+            }).then(itemObj);
+        }
+        console.log(itemObj);
+
+    }
+
+
+    function updateItem(pId) {
+        workingId = pId;
+        $.ajax({
+            url: "/api/item/" + pId,
+            method: "GET"
+        }).then(function (e) {
+            $('#itemModal').modal()
+            document.getElementById('itemModalLabel').innerHTML = "Update Item";
+            document.getElementById('gobtn').innerHTML = "Update";
+            document.getElementById('userid').value = e.userid;
+            document.getElementById('description').value = e.description;
+            document.getElementById('address').value = e.address;
+            document.getElementById('city').value = e.city;
+            document.getElementById('state').value = e.state;
+            document.getElementById('zip').value = e.zip;
+            document.getElementById('country').value = e.country;
+            document.getElementById('lng').value = e.lng;
+            document.getElementById('lat').value = e.lat;
+            document.getElementById('dayCost').value = e.dayCost;
+            document.getElementById('image').value = e.image;
+        });
     };
 
     function deleteItem(pid) {
@@ -120,4 +175,5 @@
         console.log("*************************************");
         console.log(pid);
     };
+
 </script>

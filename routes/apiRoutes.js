@@ -73,27 +73,32 @@ module.exports = function (app) {
   });
 
 
-  app.post("/api/item", function (req, res) {
+
+
+
+  // update item
+  app.post("/api/item/:id", function (req, res) {
     console.log(req.body)
-    db.Item.create({
-      userId: req.body.puserid,
-      description: req.body.pdescription,
-      address: req.body.paddress,
-      city: req.body.city,
-      state: req.body.state,
-      zip: req.body.zip,
-      country: req.body.country,
-      lng: req.body.lng,
-      lat: req.body.lat,
-      dayCost: req.body.dayCost,
-      image: req.body.image
-    })
-      .then(function () {
-        res.redirect(307, "/api/login");
-      })
-      .catch(function (err) {
-        res.status(401).json(err);
-      });
+    let id = req.params.id;
+    if (id) {
+      db.Item.update(
+        req,
+        { returning: true, where: { id: req.params.id } })
+        .then(function () {
+          res.redirect(307, "/api/login");
+        })
+        .catch(function (err) {
+          res.status(401).json(err);
+        });
+    } else {
+      db.Item.create(req)
+        .then(function () {
+          res.redirect(307, "/api/login");
+        })
+        .catch(function (err) {
+          res.status(401).json(err);
+        });
+    }
   });
 
 
